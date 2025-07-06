@@ -1,0 +1,32 @@
+# ---------------------
+# Global
+# ---------------------
+.DS_Store
+Thumbs.db
+*.log
+logs/
+.vscode/
+.idea/
+
+# ---------------------
+# React App (Client)
+/Task-Manager-Client/task_management_client/node_modules/
+/Task-Manager-Client/task_management_client/.pnp
+/Task-Manager-Client/task_management_client.pnp.js
+/Task-Manager-Client/task_management_client/coverage
+/Task-Manager-Client/task_management_client/build
+
+/Task-Manager-Client/task_management_client/.env.local
+/Task-Manager-Client/task_management_client/.env.development.local
+/Task-Manager-Client/task_management_client/.env.test.local
+/Task-Manager-Client/task_management_client/.env.production.local
+
+/Task-Manager-Client/task_management_client/npm-debug.log*
+/Task-Manager-Client/task_management_client/yarn-debug.log*
+/Task-Manager-Client/task_management_client/yarn-error.log*
+
+# ---------------------
+# Node.js Server
+/Task-Manager-Server/node_modules/
+/Task-Manager-Server/.env
+/Task-Manager-Server/logs/
