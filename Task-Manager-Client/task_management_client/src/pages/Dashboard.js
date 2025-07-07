@@ -3,7 +3,7 @@ import API from '../services/Api';
 import '../styles/dashboard.css';
 import { FaTrash } from 'react-icons/fa';
 import Swal from 'sweetalert2';
-import { DndContext, useDraggable, useDroppable } from '@dnd-kit/core';
+import { DndContext, useDraggable, useDroppable, PointerSensor, TouchSensor, useSensor, useSensors } from '@dnd-kit/core';
 import Navbar from '../components/Navbar';
 import socket from '../socket/socket';
 
@@ -34,11 +34,21 @@ const Dashboard = () => {
       });
       setTasks(res.data);
     } catch (err) {
-      console.error('Error fetching tasks:', err);
+      console.error('Error fetching tasks:');
     }
   };
 
-  useEffect(() => {
+  const sensors = useSensors(
+    useSensor(PointerSensor),
+    useSensor(TouchSensor, {
+      activationConstraint: {
+        delay: 2000,
+        tolerance: 5,
+      },
+    })
+  );
+
+  useEffect(()=>{
     const fetchUser = async () => {
       try{
         const token = localStorage.getItem('token');
@@ -47,7 +57,7 @@ const Dashboard = () => {
         });
         setUser(res.data);
       }catch (err){
-        console.error('Failed to fetch user:', err);
+        console.error('Failed to fetch user');
       }
     };
     fetchUser();
@@ -55,6 +65,10 @@ const Dashboard = () => {
 
   useEffect(()=>{
     socket.connect();
+
+    socket.on('connect_error', (err) => {
+      console.error('WebSocket connection error:');
+    });
 
     socket.on('taskCreated', (newTask) => {
       setTasks((prev) => [...prev, newTask]);
@@ -75,6 +89,7 @@ const Dashboard = () => {
       socket.off('taskCreated');
       socket.off('taskUpdated');
       socket.off('taskDeleted');
+      socket.off('connect_error');
     };
   },[]);
 
@@ -98,7 +113,7 @@ const Dashboard = () => {
       });
       fetchTasks();
     } catch (err) {
-      console.error("Error updating task status:", err);
+      console.error("Error updating task status:");
     }
   };
 
@@ -229,6 +244,7 @@ const Dashboard = () => {
 
     try{
       const token = localStorage.getItem('token');
+
       await API.put(`/tasks/${taskId}`, {
         status: newStatus,
         assignedUser: tasks.find(t => t._id === taskId).assignedUser?._id,
@@ -315,7 +331,12 @@ const Dashboard = () => {
       transition: transform ? 'none' : 'box-shadow 0.2s ease',
     };
 
-    const handlePointerDown = () => setIsDragging(false);
+    const handlePointerDown = () =>{
+      setIsDragging(false);
+      if (navigator.vibrate) {
+        navigator.vibrate(50);
+      }
+    }
     const handlePointerMove = () => setIsDragging(true);
     const handleClick = () => {
       if (!isDragging) setSelectedTask(task);
@@ -392,7 +413,7 @@ const Dashboard = () => {
       <div className="flip-card-wrapper">
         <div className={`flip-card-inner ${activeView === 'form' ? 'flip' : ''}`}>
           <div className="flip-card-front">
-            <DndContext onDragEnd={handleDragEnd}>
+            <DndContext onDragEnd={handleDragEnd} sensors={sensors}>
               <div className="kanban-board">
                 {columns.map((column) => {
                   const columnTasks = tasks.filter(task => task.status === column);
@@ -451,7 +472,7 @@ const Dashboard = () => {
     </div>
     {selectedTask && (
       <div className="task-modal-overlay" onClick={() => setSelectedTask(null)}>
-        <div className="task-modal" onClick={e => e.stopPropagation()}>
+        <div className={`task-modal ${selectedTask.priority.toLowerCase()}`} onClick={e => e.stopPropagation()}>
           <h2>{selectedTask.title}</h2>
           <p><strong>Status:</strong> {selectedTask.status}</p>
           <p><strong>Priority:</strong> {selectedTask.priority}</p>

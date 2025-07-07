@@ -1,6 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Ubuntu:wght@300;400;500;700&display=swap');
 
-.dashboard-wrapper {
+.dashboard-wrapper{
   min-height: 100vh;
   font-family: 'Ubuntu', sans-serif;
   padding: 2rem;
@@ -9,49 +9,75 @@
   align-items: center;
 }
 
-.view-toggle-buttons {
+.view-toggle-buttons{
   margin-bottom: 2rem;
   display: flex;
   gap: 1rem;
 }
 
-.view-toggle-buttons button {
-  background: #2f80ed;
+.view-toggle-buttons button{
+  background: transparent;
   color: white;
-  border: none;
+  border: 2px solid white;
   padding: 10px 24px;
   border-radius: 10px;
   font-weight: 600;
   cursor: pointer;
   font-size: 1rem;
-  transition: background 0.3s ease;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
 }
 
-.view-toggle-buttons button.active {
-  background: #1c5ccd;
+.view-toggle-buttons button::before{
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(255, 255, 255, 0.2);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: -1;
 }
 
-.flip-card-wrapper {
+.view-toggle-buttons button:hover::before{
+  opacity: 1;
+  filter: blur(8px);
+}
+
+.view-toggle-buttons button:hover{
+  box-shadow: 0 0 10px white, 0 0 20px white;
+  transform: scale(1.03);
+}
+
+.view-toggle-buttons button.active{
+  background: rgba(255, 255, 255, 0.15);
+  box-shadow: 0 0 12px white;
+  border-color: #fff;
+}
+
+.flip-card-wrapper{
   perspective: 1500px;
   position: relative;
   width: 100%;
-  min-height: 700px;
   margin-top: 2rem;
+  flex-grow: 1;
 }
 
-.flip-card-inner {
+.flip-card-inner{
   position: relative;
   width: 100%;
   transform-style: preserve-3d;
   transition: transform 0.8s ease;
 }
 
-.flip-card-inner.flip {
+.flip-card-inner.flip{
   transform: rotateY(180deg);
 }
 
 .flip-card-front,
-.flip-card-back {
+.flip-card-back{
   position: absolute;
   width: 100%;
   backface-visibility: hidden;
@@ -59,25 +85,25 @@
   left: 0;
 }
 
-.flip-card-front {
+.flip-card-front{
   z-index: 2;
   transform: rotateY(0deg);
 }
 
-.flip-card-back {
+.flip-card-back{
   transform: rotateY(180deg);
   z-index: 1;
 }
 
-.flip-card {
+.flip-card{
   perspective: 2000px;
   width: 100%;
   max-width: 1200px;
-  min-height: 700px;
+  height: auto;
   position: relative;
 }
 
-.flip-card .flip-card-face {
+.flip-card .flip-card-face{
   position: absolute;
   width: 100%;
   height: 100%;
@@ -93,34 +119,35 @@
   transition: transform 0.8s ease;
 }
 
-.flip-card.board .front {
+.flip-card.board .front{
   transform: rotateY(0deg);
   z-index: 2;
 }
 
-.flip-card.board .back {
+.flip-card.board .back{
   transform: rotateY(180deg);
   z-index: 1;
 }
 
-.flip-card.form .front {
+.flip-card.form .front{
   transform: rotateY(180deg);
   z-index: 1;
 }
 
-.flip-card.form .back {
+.flip-card.form .back{
   transform: rotateY(360deg);
   z-index: 2;
 }
 
-.kanban-board {
+.kanban-board{
   display: flex;
-  justify-content:space-around;
+  justify-content: space-around;
   flex-wrap: wrap;
   gap: 1.5rem;
+  width: 100%;
 }
 
-.kanban-column {
+.kanban-column{
   background: rgba(255, 255, 255, 0.15);
   backdrop-filter: blur(6px);
   border-radius: 16px;
@@ -131,21 +158,21 @@
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
-.kanban-column h2 {
+.kanban-column h2{
   text-align: center;
   font-size: 26px;
   margin-bottom: 1rem;
   color: #fff;
 }
 
-.task-list {
+.task-list{
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 14px;
   padding: 0.5rem;
 }
 
-.task-card {
+.task-card{
   background: rgba(255, 255, 255, 0.25);
   border-radius: 10px;
   padding: 10px;
@@ -158,7 +185,7 @@
   word-wrap: break-word;
 }
 
-.task-card p {
+.task-card p{
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
@@ -168,14 +195,15 @@
   word-break: break-word;
 }
 
-.drag-handle {
+.drag-handle{
   cursor: grab;
   padding: 2px;
   color: #888;
   user-select: none;
+  touch-action: none;
 }
 
-.task-card h4 {
+.task-card h4{
   display: -webkit-box;
   -webkit-line-clamp: 1;
   -webkit-box-orient: vertical;
@@ -185,7 +213,7 @@
   word-break: break-word;
 }
 
-.task-modal-overlay {
+.task-modal-overlay{
   position: fixed;
   top: 0;
   left: 0;
@@ -198,28 +226,85 @@
   z-index: 999;
 }
 
-.task-modal {
-  background: white;
-  color: black;
+.task-modal{
   padding: 2rem;
   border-radius: 12px;
   max-width: 500px;
   width: 90%;
   max-height: 80vh;
   overflow-y: auto;
+  backdrop-filter: blur(10px);
+  border-left: 5px solid transparent;
+  transition: background 0.3s ease, border-left 0.3s ease;
+  align-items: center;
+  text-align: center;
 }
 
-.task-modal button {
-  margin-top: 1rem;
-  background: #2f80ed;
+.task-modal.high{
+  background: rgba(255, 65, 65, 0.25);
+  border-left: 5px solid red;
+  color: #400000;
+}
+
+.task-modal.medium{
+  background: rgba(255, 255, 100, 0.25);  
+  border-left: 5px solid gold;
+  color: #665500;
+}
+
+.task-modal.low{
+  background: rgba(100, 255, 100, 0.25);      
+  border-left: 5px solid limegreen;
+  color: #003300;
+}
+
+.task-modal p,
+.task-modal h2,
+.task-modal strong{
   color: white;
-  border: none;
-  padding: 10px 18px;
-  border-radius: 8px;
-  cursor: pointer;
+  margin-bottom: 10px;
 }
 
-.task-description-scroll {
+.task-modal button{
+  background: transparent;
+  color: white;
+  border: 2px solid white;
+  padding: 10px 20px;
+  margin-top: 9px;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.4s ease;
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+  text-shadow: 0 0 5px rgba(255, 255, 255, 0.8);
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.15);
+}
+
+.task-modal button::before{
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 300%;
+  height: 100%;
+  background: linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+  transition: left 0.6s ease;
+  z-index: -1;
+}
+
+.task-modal button:hover{
+  box-shadow: 0 0 12px white, 0 0 24px white;
+  transform: scale(1.05);
+}
+
+.task-modal button:hover::before{
+  left: 100%;
+}
+
+.task-description-scroll{
   max-height: 250px;
   overflow-y: auto;
   background: #f2f2f2;
@@ -229,39 +314,39 @@
 }
 
 
-.priority-high {
-  background-color: rgba(255, 0, 0, 0.3);
+.priority-high{
+  background-color: rgba(220, 20, 60, 0.6);
   border-left: 5px solid red;
 }
 
-.priority-medium {
-  background-color: rgba(255, 255, 0, 0.3);
+.priority-medium{
+  background-color: rgba(255, 193, 7, 0.5);
   border-left: 5px solid gold;
 }
 
-.priority-low {
-  background-color: rgba(0, 255, 0, 0.3);
+.priority-low{
+  background-color: rgba(0, 200, 83, 0.6);
   border-left: 5px solid limegreen;
 }
 
-.task-card-header {
+.task-card-header{
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
-.delete-icon {
+.delete-icon{
   color: #ff4d4d;
   cursor: pointer;
   font-size: 0.9rem;
   transition: color 0.2s ease;
 }
 
-.delete-icon:hover {
+.delete-icon:hover{
   color: #ff1a1a;
 }
 
-.task-card select {
+.task-card select{
   margin-top: 8px;
   padding: 6px;
   border-radius: 6px;
@@ -272,19 +357,20 @@
   font-weight: 500;
 }
 
-.task-card:hover {
+.task-card:hover{
   transform: scale(1.04);
   box-shadow: 0 4px 12px rgba(255, 255, 255, 0.3);
+  filter: brightness(1.1);
 }
 
-.task-form {
+.task-form{
   display: flex;
   flex-direction: column;
   align-items: center;
   color: #fff;
 }
 
-.create-task-form {
+.create-task-form{
   display: flex;
   flex-direction: column;
   gap: 18px;
@@ -293,7 +379,7 @@
   margin: 0 auto;
 }
 
-.create-task-form h4 {
+.create-task-form h4{
   font-size: 1.1rem;
   margin-bottom: 6px;
 }
@@ -321,11 +407,11 @@
   outline: none;
 }
 
-.create-task-form textarea {
+.create-task-form textarea{
   resize: none;
 }
 
-.create-task-form button {
+.create-task-form button{
   background: #2f80ed;
   color: white;
   border: none;
@@ -336,6 +422,122 @@
   transition: background 0.3s ease;
 }
 
-.create-task-form button:hover {
+.create-task-form button:hover{
   background: #1c5ccd;
+}
+
+@media (max-width: 1024px) {
+  .kanban-board{
+    justify-content: center;
+  }
+
+  .kanban-column{
+    max-width: 90%;
+  }
+
+  .task-list{
+    grid-template-columns: 1fr;
+  }
+
+  .create-task-form{
+    max-width: 90%;
+  }
+
+  .flip-card-wrapper, .flip-card{
+    min-height: 600px;
+  }
+
+  .view-toggle-buttons{
+    flex-direction: column;
+    gap: 0.8rem;
+  }
+
+  .navbar{
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .logo{
+    width: 100%;
+    margin-bottom: 0.5rem;
+  }
+
+  .navbar-right{
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.8rem;
+  }
+}
+
+
+@media(max-width:768px){
+  .dashboard-wrapper{
+    padding: 1rem;
+  }
+
+  .kanban-board{
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .kanban-column{
+    width: 100%;
+    max-width: 95%;
+    min-height: 400px;
+  }
+
+  .task-list{
+    grid-template-columns: 1fr;
+  }
+
+  .task-card{
+    font-size: 0.9rem;
+  }
+
+  .navbar{
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 10px;
+    padding: 1rem;
+  }
+
+  .logo{
+    font-size: 1.6rem;
+    width: 100%;
+  }
+
+  .username{
+    font-size: 1rem;
+    width: 100%;
+  }
+
+  .navbar-right{
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    width: 100%;
+    gap: 0.8rem;
+  }
+
+  .nav-btn,.logout-btn{
+    width: auto;
+    font-size: 0.95rem;
+    padding: 8px 14px;
+  }
+
+  .task-modal{
+    padding: 1rem;
+    width: 95%;
+  }
+
+  .modal-glow-button{
+    width: 100%;
+    font-size: 1rem;
+  }
+
+  .create-task-form button{
+    width: 100%;
+  }
 }

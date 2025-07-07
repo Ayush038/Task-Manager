@@ -1,33 +1,36 @@
 .activity-log-container {
-  padding: 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-  width: 100%;
+  padding: 2rem;
+  max-width: 800px;
+  margin: auto;
 }
 
 .activity-card {
-  width: 100%;
-  background: rgba(0, 0, 0, 0.1);
-  border-radius: 12px;
-  padding: 15px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  text-align: center;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255,255,255,0.2);
+  backdrop-filter: blur(5px);
+  color: white;
+  padding: 1.5rem;
+  border-radius: 10px;
+  margin-bottom: 1rem;
+  font-family: 'Ubuntu', sans-serif;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
 }
 
 .log-title {
-  font-weight: 600;
+  font-weight: 700;
   font-size: 1.1rem;
-  margin-bottom: 8px;
 }
 
 .log-action {
-  color: #2d3436;
-  margin-bottom: 6px;
-  font-style: italic;
+  margin: 0.5rem 0;
+}
+
+.log-action strong {
+  color: #ffd54f;
+  font-weight: 700;
 }
 
 .log-time {
-  font-size: 0.85rem;
-  color: #636e72;
+  font-size: 0.9rem;
+  color: #ccc;
 }

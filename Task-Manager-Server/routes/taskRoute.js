@@ -31,11 +31,12 @@ router.post('/', protect, async (req, res)=>{
 
     await logAction({
       user:req.user,
-      action:`created task"${task.title}"`,
+      action: `created task titled "${task.title}"`,
       task: task._id
     });
 
-    req.io.emit('taskCreated', task);
+    const populatedTask = await task.populate('assignedUser', 'FullName UserName');
+    req.io.emit('taskCreated', populatedTask);
 
     res.status(201).json(task);
   }catch(err){
@@ -96,11 +97,12 @@ router.post('/smart-assign', protect, async (req, res) => {
 
     await logAction({
       user:req.user,
-      action:`created a task via Smart Assign (assigned to ${minUser.UserName})`,
+      action:`created task titled "${task.title}" via Smart Assign (assigned to ${minUser.UserName})`,
       task: task._id
     });
 
-    req.io.emit('taskCreated', task);
+    const populatedTask = await task.populate('assignedUser', 'FullName UserName');
+    req.io.emit('taskCreated', populatedTask);
 
     res.status(201).json(task);
   }catch(err){
@@ -145,7 +147,7 @@ router.put('/:id', protect, async (req, res) => {
 
     await logAction({
       user:req.user,
-      action:'updated a task',
+      action:`updated task titled "${updatedTask.title}"`,
       task:updatedTask._id
     });
 
@@ -165,7 +167,7 @@ router.delete('/:id', protect, async (req, res) => {
     await task.deleteOne();
     await logAction({
       user: req.user,
-      action: 'deleted a task',
+      action: `deleted task titled "${task.title}"`,
       task: task._id
     });
 

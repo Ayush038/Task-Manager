@@ -6,7 +6,14 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    cursor: url('../public/cursor.cur'),auto;
 }
 body{
-      background: linear-gradient(to right, #c6ffdd, #fbd786, #f7797d);
+    background-image: url("../public/App_Background.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    min-height: 100vh;
+    font-family: 'Ubuntu', sans-serif;
 }

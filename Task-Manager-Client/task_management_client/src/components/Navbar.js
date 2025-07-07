@@ -13,7 +13,7 @@ const Navbar = ({ user, onLogout }) => {
       <div className="navbar-right">
         <span className="username">Welcome {user?.UserName || 'Guest'}</span>
         <button className="nav-btn" onClick={() => navigate('/info')}>
-            Information
+            Info
         </button>
         <button className="nav-btn" onClick={() => navigate('/activity')}>
             Activity Log
