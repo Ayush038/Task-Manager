@@ -212,12 +212,15 @@ const Dashboard = () => {
   };
 
 
-  const handleDragEnd = async (event) => {
+  const handleDragEnd =async(event)=>{
+    const token = localStorage.getItem('token');
+
     const { active, over } = event;
     if (!over || active.id === over.id) return;
 
     const taskId = active.id;
     const newStatus = over.id;
+    const originalTask = tasks.find(t => t._id === taskId);
 
     const updatedTasks = tasks.map(task =>
       task._id === taskId ? { ...task, status: newStatus } : task
@@ -229,20 +232,73 @@ const Dashboard = () => {
       await API.put(`/tasks/${taskId}`, {
         status: newStatus,
         assignedUser: tasks.find(t => t._id === taskId).assignedUser?._id,
-      }, {
+        lastModifiedAt: originalTask.lastModifiedAt,
+      },{
         headers: { Authorization: token },
       });
     }catch(err){
-      console.error("Error updating task status:", err);
-      setTasks(tasks);
-      Swal.fire({
-        icon: 'error',
-        title: 'Update Failed',
-        text: 'Could not move task. Please try again.',
-      });
+      if (err.response?.status === 409) {
+        const currentTask = err.response.data.currentTask;
+        setTasks(tasks);
+        Swal.fire({
+          title: 'Conflict Detected!',
+          html: `
+            <p><strong>Your version:</strong> ${newStatus}</p>
+            <p><strong>Current version:</strong> ${currentTask.status}</p>
+            <p>Another user already moved this task. What do you want to do?</p>
+          `,
+          showCancelButton: true,
+          showDenyButton: true,
+          confirmButtonText: 'Merge (Pick Column)',
+          denyButtonText: 'Overwrite',
+          cancelButtonText: 'Cancel',
+        }).then(async (result) => {
+          if (result.isConfirmed) {
+            const mergeResult = await Swal.fire({
+              title:'Choose new column',
+              input:'select',
+              inputOptions:{
+                'Todo':'Todo',
+                'In Progress':'In Progress',
+                'Done':'Done'
+              },
+              inputPlaceholder: 'Select column',
+              showCancelButton: true,
+            });
+            if(mergeResult.isConfirmed){
+              await API.put(`/tasks/${taskId}`,{
+                status: mergeResult.value,
+                assignedUser: originalTask.assignedUser?._id,
+                lastModifiedAt: currentTask.lastModifiedAt,
+              },{
+                headers:{ Authorization: token },
+              });
+              fetchTasks();
+              Swal.fire('Merged!','', 'success');
+            }
+          } else if (result.isDenied) {
+            await API.put(`/tasks/${taskId}?force=true`, {
+              status: newStatus,
+              assignedUser: originalTask.assignedUser?._id,
+              lastModifiedAt: currentTask.lastModifiedAt,
+            }, {
+              headers: { Authorization: token },
+            });
+            fetchTasks();
+            Swal.fire('Overwritten!', '', 'success');
+          }
+        });
+      }else{
+        console.error("Error updating task status:", err);
+        setTasks(tasks);
+        Swal.fire({
+          icon: 'error',
+          title: 'Update Failed',
+          text: 'Could not move task. Please try again.',
+        });
+      }
     }
-  };
-
+  }
 
   function DraggableTask({ task }) {
     const [dragEnabled, setDragEnabled] = useState(true);

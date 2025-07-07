@@ -123,12 +123,23 @@ router.put('/:id', protect, async (req, res) => {
     const task = await Task.findById(req.params.id);
     if (!task) return res.status(404).json({ message: "Task not found" });
 
+    const incomingTimestamp = new Date(req.body.lastModifiedAt).getTime();
+    const currentTimestamp = new Date(task.lastModifiedAt).getTime();
+
+    if (incomingTimestamp !== currentTimestamp) {
+      return res.status(409).json({
+        message: "Conflict detected. Task has been modified by another user.",
+        currentTask: task,
+      });
+    }
+
     if (req.body.title !== undefined) task.title = req.body.title;
     if (req.body.description !== undefined) task.description = req.body.description;
     if (req.body.status !== undefined) task.status = req.body.status;
     if (req.body.priority !== undefined) task.priority = req.body.priority;
     if (req.body.assignedUser !== undefined) task.assignedUser = req.body.assignedUser;
-
+    task.lastModifiedAt = new Date();
+    console.log(task.lastModifiedAt);
     const updatedTask = await task.save();
     await updatedTask.populate('assignedUser', 'FullName UserName');
 
