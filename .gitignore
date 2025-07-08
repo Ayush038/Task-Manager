@@ -15,7 +15,6 @@ logs/
 /Task-Manager-Client/task_management_client.pnp.js
 /Task-Manager-Client/task_management_client/coverage
 /Task-Manager-Client/task_management_client/build
-/Task-Manager-Client/.env
 
 /Task-Manager-Client/task_management_client/.env.local
 /Task-Manager-Client/task_management_client/.env.development.local
