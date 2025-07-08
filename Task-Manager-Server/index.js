@@ -45,6 +45,9 @@ app.use('/api/tasks', taskRoutes);
 app.get('/healthz', (req, res) => {
   res.status(200).send('OK');
 });
+app.get('/ping', (req, res) => {
+  res.send('pong');
+});
 app.get('/', (req, res) => res.send('API is running...'));
 
 const PORT = process.env.PORT;
