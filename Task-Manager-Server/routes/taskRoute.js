@@ -125,6 +125,8 @@ router.put('/:id', protect, async (req, res) => {
     const task = await Task.findById(req.params.id);
     if (!task) return res.status(404).json({ message: "Task not found" });
 
+    console.log('Incoming lastModifiedAt:', req.body.lastModifiedAt);
+    console.log('Task in DB lastModifiedAt:', task.lastModifiedAt.toISOString());
     const incomingTimestamp = new Date(req.body.lastModifiedAt).getTime();
     const currentTimestamp = new Date(task.lastModifiedAt).getTime();
 
