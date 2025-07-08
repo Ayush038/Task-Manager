@@ -75,11 +75,9 @@ const Dashboard = () => {
     });
 
     socket.on('taskUpdated',(updatedTask)=>{
-      setTimeout(()=>{
         setTasks((prev)=>
           prev.map((task)=> task._id === updatedTask._id ? updatedTask : task)
         );
-      },10000)
     });
     
 
