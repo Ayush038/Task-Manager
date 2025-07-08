@@ -246,12 +246,13 @@ const Dashboard = () => {
 
     try{
       const token = localStorage.getItem('token');
+      const originalTask = tasks.find(t => t._id === taskId);
 
       await API.put(`/tasks/${taskId}`, {
         status: newStatus,
-        assignedUser: tasks.find(t => t._id === taskId).assignedUser?._id,
-        lastModifiedAt: originalTask.lastModifiedAt,
-      },{
+        assignedUser: originalTask.assignedUser?._id,
+        lastModifiedAt: new Date(originalTask.lastModifiedAt),
+      }, {
         headers: { Authorization: token },
       });
     }catch(err){
