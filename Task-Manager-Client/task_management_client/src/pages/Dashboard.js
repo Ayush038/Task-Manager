@@ -108,19 +108,19 @@ const Dashboard = () => {
     window.location.href = '/';
   };
 
-  const handleStatusChange = async (taskId, newStatus) => {
-    try {
-      const token = localStorage.getItem('token');
-      await API.put(`/tasks/${taskId}`, { status: newStatus }, {
-        headers: { Authorization: token },
-        assignedUser: originalTask.assignedUser?._id,
-        lastModifiedAt: originalTask.lastModifiedAt,
-      });
-      fetchTasks();
-    } catch (err) {
-      console.error("Error updating task status:");
-    }
-  };
+  // const handleStatusChange = async (taskId, newStatus) => {
+  //   try {
+  //     const token = localStorage.getItem('token');
+  //     await API.put(`/tasks/${taskId}`, { status: newStatus }, {
+  //       headers: { Authorization: token },
+  //       assignedUser: originalTask.assignedUser?._id,
+  //       lastModifiedAt: originalTask.lastModifiedAt,
+  //     });
+  //     fetchTasks();
+  //   } catch (err) {
+  //     console.error("Error updating task status:");
+  //   }
+  // };
 
   const handleSubmit =async(e)=>{
     e.preventDefault();
