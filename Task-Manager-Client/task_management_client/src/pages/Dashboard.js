@@ -75,10 +75,13 @@ const Dashboard = () => {
     });
 
     socket.on('taskUpdated',(updatedTask)=>{
-      setTasks((prev)=>
-        prev.map((task)=> task._id === updatedTask._id ? updatedTask : task)
-      );
+      setTimeout(()=>{
+        setTasks((prev)=>
+          prev.map((task)=> task._id === updatedTask._id ? updatedTask : task)
+        );
+      },10000)
     });
+    
 
     socket.on('taskDeleted',(taskId)=>{
       setTasks((prev) => prev.filter((task) => task._id !== taskId));
