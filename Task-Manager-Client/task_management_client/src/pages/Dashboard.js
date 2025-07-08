@@ -372,7 +372,7 @@ const Dashboard = () => {
           />
         </div>
         <p>{task.description}</p>
-        <select
+        {/* <select
           value={task.status}
           onChange={(e) => handleStatusChange(task._id, e.target.value)}
           onClick={(e) => e.stopPropagation()}
@@ -380,7 +380,7 @@ const Dashboard = () => {
           <option value="Todo">Todo</option>
           <option value="In Progress">In Progress</option>
           <option value="Done">Done</option>
-        </select>
+        </select> */}
       </div>
     );
   }
@@ -456,10 +456,10 @@ const Dashboard = () => {
                     <option value="Low">Low</option>
                   </select>
                 </label>
-                <label>
+                {/* <label>
                   <h4>Assign to User</h4>
                   <input type="text" name="assignedUser" value={formData.assignedUser} onChange={handleChange} />
-                </label>
+                </label> */}
                 <button type="submit">Create Task</button>
                 <button type="button" onClick={handleSmartAssign} style={{ background: '#00b894', marginTop: '10px' }}>
                   Smart Assign

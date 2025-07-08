@@ -3,6 +3,7 @@ import API from '../services/Api';
 import '../styles/activityLog.css';
 import Navbar from '../components/Navbar';
 
+
 const ActivityLog= () => {
   const [logs, setLogs] = useState([]);
   const [user, setUser] = useState(null);
