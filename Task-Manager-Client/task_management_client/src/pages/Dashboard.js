@@ -75,9 +75,11 @@ const Dashboard = () => {
     });
 
     socket.on('taskUpdated',(updatedTask)=>{
-      setTasks((prev)=>
-        prev.map((task)=> task._id === updatedTask._id ? updatedTask : task)
-      );
+      setTimeout(()=>{
+        setTasks((prev)=>
+          prev.map((task)=> task._id === updatedTask._id ? updatedTask : task)
+        );
+      },10000)
     });
 
     socket.on('taskDeleted',(taskId)=>{
@@ -110,6 +112,8 @@ const Dashboard = () => {
       const token = localStorage.getItem('token');
       await API.put(`/tasks/${taskId}`, { status: newStatus }, {
         headers: { Authorization: token },
+        assignedUser: originalTask.assignedUser?._id,
+        lastModifiedAt: originalTask.lastModifiedAt,
       });
       fetchTasks();
     } catch (err) {
