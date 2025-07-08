@@ -12,9 +12,6 @@ const Navbar = ({ user, onLogout }) => {
       </div>
       <div className="navbar-right">
         <span className="username">Welcome {user?.UserName || 'Guest'}</span>
-        {/* <button className="nav-btn" onClick={() => navigate('/info')}>
-            Info
-        </button> */}
         <button className="nav-btn" onClick={() => navigate('/activity')}>
             Activity Log
         </button>

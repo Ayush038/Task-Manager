@@ -372,15 +372,6 @@ const Dashboard = () => {
           />
         </div>
         <p>{task.description}</p>
-        {/* <select
-          value={task.status}
-          onChange={(e) => handleStatusChange(task._id, e.target.value)}
-          onClick={(e) => e.stopPropagation()}
-        >
-          <option value="Todo">Todo</option>
-          <option value="In Progress">In Progress</option>
-          <option value="Done">Done</option>
-        </select> */}
       </div>
     );
   }
